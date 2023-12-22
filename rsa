@@ -1,0 +1,43 @@
+#!/usr/bin/python3
+import math
+import sys
+
+
+def add_factors(factor, factors, num):
+    factors.append(num // factor)
+    factors.append(factor)
+
+
+def rsa_factorization(num):
+    factors = []
+    factor = 2
+    if num % factor == 0:
+        add_factors(factor, factors, num)
+        return factors
+    factor = 3
+    while factor < 20:
+        if num % factor == 0:
+            add_factors(factor, factors, num)
+            return factors
+        factor += 2
+    factor = round(math.sqrt(num))
+    while factor >= 0:
+        if num % factor == 0:
+            add_factors(factor, factors, num)
+            return factors
+        if factor % 2 == 0:
+            factor -= 1
+        else:
+            factor -= 2
+
+
+if len(sys.argv) != 2:
+    print("Usage: factors <file>")
+    exit()
+filename = sys.argv[1]
+with open(filename) as file:
+    for line in file:
+        if line.strip():
+            number = int(line)
+            factor1, factor2 = rsa_factorization(number)
+            print("{:d}={:d}*{:d}".format(number, factor1, factor2))
